@@ -65,7 +65,6 @@ cp .env.example .env
 Update `.env` with your database, JWT, and Pusher credentials:
 
 ```env
-APP_URL=http://localhost
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
@@ -80,9 +79,6 @@ PUSHER_APP_ID=your_pusher_id
 PUSHER_APP_KEY=your_pusher_key
 PUSHER_APP_SECRET=your_pusher_secret
 PUSHER_APP_CLUSTER=your_pusher_cluster
-
-VITE_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
-VITE_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
 ```
 
 5.  Generate application and JWT keys:
