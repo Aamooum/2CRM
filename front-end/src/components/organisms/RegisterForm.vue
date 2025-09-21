@@ -6,6 +6,7 @@
       type="text"
       placeholder="John"
       required
+      :errorMessage="errors.full_name ? errors.full_name[0] : ''"
     />
 
     <FormField
@@ -22,6 +23,7 @@
       type="email"
       placeholder="name@example.com"
       required
+      :errorMessage="errors.email ? errors.email[0] : ''"
     />
 
     <FormField
@@ -30,8 +32,8 @@
       type="password"
       placeholder="••••••••"
       required
+      :errorMessage="errors.password ? errors.password[0] : ''"
     />
-    <p v-if="errors.password" class="text-xs text-red-500">{{ errors.password }}</p>
 
     <FormField
       label="Confirm Password"
@@ -39,8 +41,8 @@
       type="password"
       placeholder="••••••••"
       required
+      :errorMessage="errors.password_confirmation ? errors.password_confirmation[0] : ''"
     />
-    <p v-if="errors.confirmPassword" class="text-xs text-red-500">{{ errors.confirmPassword }}</p>
 
     <button
       type="submit"
@@ -52,11 +54,12 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from 'vue'
+import { ref } from 'vue'
 import FormField from '@/components/molecules/FormField.vue'
 
 const props = defineProps({
-  submitLabel: { type: String, default: 'Sign In with Email' }
+  submitLabel: { type: String, default: 'Sign In with Email' },
+  errors: { type: Object, default: () => ({}) }
 })
 const emit = defineEmits(['submit'])
 
@@ -66,41 +69,7 @@ const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 
-const errors = reactive({
-  password: '',
-  confirmPassword: ''
-})
-
-watch(password, (val) => {
-  if (val.length < 8) {
-    errors.password = 'Password must be at least 8 characters.'
-  } else if (!/[A-Za-z]/.test(val) || !/[0-9]/.test(val)) {
-    errors.password = 'Password must contain letters and numbers.'
-  } else {
-    errors.password = ''
-  }
-
-  if (confirmPassword.value && val !== confirmPassword.value) {
-    errors.confirmPassword = 'Passwords do not match.'
-  } else {
-    errors.confirmPassword = ''
-  }
-})
-
-
-watch(confirmPassword, (val) => {
-  if (val && val !== password.value) {
-    errors.confirmPassword = 'Passwords do not match.'
-  } else {
-    errors.confirmPassword = ''
-  }
-})
-
 function onSubmit() {
-  if (errors.password || errors.confirmPassword) {
-    return
-  }
-
   const payload = {
     full_name: `${firstName.value} ${lastName.value}`,
     email: email.value,

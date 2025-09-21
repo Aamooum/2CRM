@@ -1,6 +1,6 @@
 <template>
   <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-20">
-    <div class="bg-[#1A1A1A] rounded-lg shadow-lg w-full max-w-md p-6 relative">
+    <div class="bg-[#1A1A1A] rounded-lg shadow-lg w-[90vw] md:w-full max-w-md p-6 relative">
       <button
         @click="$emit('cancel')"
         class="absolute top-3 right-3 text-gray-200 hover:text-gray-400"

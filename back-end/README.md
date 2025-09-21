@@ -10,50 +10,60 @@
 
 This repository contains the **Laravel** backend for a Task Manager application. It provides:
 
-- JWT-based authentication  
-- CRUD API endpoints for tasks  
-- Real-time task creation notifications via **Laravel Echo** & **Pusher**  
-- Database notifications for persistence  
+- JWT-based authentication
+- CRUD API endpoints for tasks
+- Real-time task creation notifications via **Laravel Echo** & **Pusher**
+- Database notifications for persistence
 
 ## Features
 
-- **Authentication** using `tymon/jwt-auth`  
-- **Task Management**: Create, read, update, delete tasks  
-- **Real-time Notifications**: Broadcast `TaskCreated` events to users  
-- **Database Notifications**: Store notifications in `notifications` table  
+- **Authentication** using `tymon/jwt-auth`
+- **Task Management**: Create, read, update, delete tasks
+- **Real-time Notifications**: Broadcast `TaskCreated` events to users
+- **Database Notifications**: Store notifications in `notifications` table
 
 ## Requirements
 
-- PHP 8.0+  
-- Composer  
-- MySQL or PostgreSQL  
-- Redis (for queues and broadcasting)  
-- Pusher account (app ID, key, secret, cluster)  
+- PHP 8.0+
+- Composer
+- MySQL or PostgreSQL
+- Redis (for queues and broadcasting)
+- Pusher account (app ID, key, secret, cluster)
 
 ## Installation
 
-1. Clone the repository:  
+1. Clone the repository:
 ```bash
-git clone https://github.com/your-org/task-manager-backend.git
-cd task-manager-backend
-```
+git clone https://github.com/Aamooum/2CRM
+cd back-end
+````
 
-2. Install PHP dependencies:  
+2.  Install PHP dependencies:
+
+<!-- end list -->
+
 ```bash
 composer install
 ```
 
-3. Install JS dependencies:  
+3.  Install JS dependencies:
+
+<!-- end list -->
+
 ```bash
 npm install
 ```
 
-4. Copy env file and configure:  
+4.  Copy env file and configure:
+
+<!-- end list -->
+
 ```bash
 cp .env.example .env
 ```
 
 Update `.env` with your database, JWT, and Pusher credentials:
+
 ```env
 APP_URL=http://localhost
 DB_CONNECTION=mysql
@@ -75,49 +85,65 @@ VITE_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
 VITE_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
 ```
 
-5. Generate application and JWT keys:  
+5.  Generate application and JWT keys:
+
+<!-- end list -->
+
 ```bash
 php artisan key:generate
 php artisan jwt:secret
 ```
 
-6. Run database migrations and seeders:  
+6.  Run database migrations and seeders:
+
+<!-- end list -->
+
 ```bash
 php artisan migrate --seed
 ```
 
-7. Build frontend assets (optional):  
+7.  Build frontend assets (optional):
+
+<!-- end list -->
+
 ```bash
 npm run dev
 ```
 
-8. Start the development server:  
+8.  Start the development server and queue worker:
+
+<!-- end list -->
+
 ```bash
 php artisan serve
+php artisan queue:work
 ```
 
 ## API Endpoints
 
 ### Authentication
 
-- `POST /api/auth/register` — Register a new user  
-- `POST /api/auth/login` — Login and receive JWT token  
-- Protect routes using `auth:api` middleware with `Authorization: Bearer {token}` header  
+  - `POST /api/auth/register` — Register a new user
+  - `POST /api/auth/login` — Login and receive JWT token
+  - Protect routes using `auth:api` middleware with `Authorization: Bearer {token}` header
 
 ### Tasks
 
-- `GET /api/tasks` — List all tasks for authenticated user  
-- `GET /api/tasks/{id}` — Get a single task  
-- `POST /api/tasks` — Create a new task  
-- `PUT /api/tasks/{id}` — Update an existing task  
-- `DELETE /api/tasks/{id}` — Delete a task  
+  - `GET /api/tasks` — List all tasks for authenticated user
+  - `GET /api/tasks/{id}` — Get a single task
+  - `POST /api/tasks` — Create a new task
+  - `PUT /api/tasks/{id}` — Update an existing task
+  - `DELETE /api/tasks/{id}` — Delete a task
 
 ## Real-Time Notifications
 
 ### Laravel Setup
 
-1. Configure `config/broadcasting.php` to use Pusher.  
-2. Create `TaskCreated` event implementing `ShouldBroadcast`:  
+1.  Configure `config/broadcasting.php` to use Pusher.
+2.  Create `TaskCreated` event implementing `ShouldBroadcast`:
+
+<!-- end list -->
+
 ```php
 class TaskCreated implements ShouldBroadcast {
     use Dispatchable, SerializesModels;
@@ -128,7 +154,11 @@ class TaskCreated implements ShouldBroadcast {
     }
 }
 ```
-3. Dispatch event after task creation in controller:  
+
+3.  Dispatch event after task creation in controller:
+
+<!-- end list -->
+
 ```php
 $task = Task::create($data);
 broadcast(new TaskCreated($task));
@@ -136,11 +166,18 @@ broadcast(new TaskCreated($task));
 
 ### Frontend Setup
 
-1. Install Echo and Pusher:  
+1.  Install Echo and Pusher:
+
+<!-- end list -->
+
 ```bash
 npm install laravel-echo pusher-js
 ```
-2. Initialize Echo (e.g., in `resources/js/bootstrap-echo.js`):  
+
+2.  Initialize Echo (e.g., in `resources/js/bootstrap-echo.js`):
+
+<!-- end list -->
+
 ```javascript
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
@@ -152,7 +189,11 @@ window.Echo = new Echo({
     forceTLS: true,
 });
 ```
-3. Listen for `TaskCreated` in your JS:  
+
+3.  Listen for `TaskCreated` in your JS:
+
+<!-- end list -->
+
 ```javascript
 Echo.private(`App.Models.User.${userId}`)
     .listen('TaskCreated', e => {
@@ -163,7 +204,8 @@ Echo.private(`App.Models.User.${userId}`)
 
 ## Testing
 
-Run application tests:  
+Run application tests:
+
 ```bash
 php artisan test
 ```

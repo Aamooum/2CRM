@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://vuejs.org/images/logo.png" width="150" alt="Vue Logo">
-  <img src="https://tailwindcss.com/_next/static/media/twitter.3d6346b7.svg" width="150" alt="Tailwind Logo">
+  <img src="https://avatars.githubusercontent.com/u/67109815?s=200&v=4" width="150" alt="Tailwind Logo">
 </p>
 
 ## Overview
@@ -26,8 +26,8 @@ This is the **Vue 3** + **Pinia** + **Tailwind CSS** front-end for the Task Mana
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-org/task-manager-frontend.git
-cd task-manager-frontend
+git clone https://github.com/Aamooum/2CRM
+cd front-end
 ```
 
 2. Install dependencies:
@@ -69,9 +69,8 @@ yarn build
 Create a `.env` file in the root directory with the following variables:
 
 ```env
-# API Configuration
-
 # Pusher Configuration for Real-time Notifications
+
 VITE_PUSHER_APP_KEY=your_pusher_app_key_here
 VITE_PUSHER_APP_CLUSTER=your_pusher_cluster_here
 VITE_PUSHER_APP_FORCE_TLS=true

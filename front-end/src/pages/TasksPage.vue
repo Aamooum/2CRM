@@ -4,21 +4,21 @@
       My Tasks
     </template>
     <template #content>
-      <div class="mb-6 flex my-[50px] items-center justify-between">
+      <div class="mb-6 flex my-[50px] items-start md:items-center justify-between">
         <div>
           <button
             v-for="status in statuses"
             :key="status"
             @click="selectedStatus = status"
             :class="selectedStatus===status ? 'bg-[#333333] text-[#F5F5F5]' : 'bg-[#333333] text-[#999999]'"
-            class="px-3 py-1 mr-2 rounded-full text-sm"
+            class="px-3 py-1 mb-2 mr-2 md:mr-2 ml-0 rounded-full text-sm"
           >
             {{ status }}
           </button>
         </div>
-        <button @click="openCreate" class="flex items-center bg-[#3498DB] hover:bg-[#2980B9] text-[#F5F5F5] px-4 py-2 rounded-3xl shadow">
-          <span class="pr-1"><Plus size="23" /></span>
-          <span class="font-medium">Create Task</span>
+        <button @click="openCreate" class="flex items-center bg-[#3498DB] hover:bg-[#2980B9] text-[#F5F5F5] px-3 md:px-4 py-2 rounded-3xl shadow">
+          <span class="pr-1 hidden md:block"><Plus size="23" /></span>
+          <span class="font-medium text-sm md:text-base whitespace-nowrap">Create Task</span>
         </button>
       </div>
 
