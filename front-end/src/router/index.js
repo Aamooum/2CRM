@@ -11,13 +11,19 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: LoginPage,
-    meta: { guest: true }
+    meta: {
+      guest: true,
+      title: 'Login - 2CRM'
+    }
   },
   {
     path: '/register',
     name: 'Register',
     component: RegisterPage,
-    meta: { guest: true }
+    meta: {
+      guest: true,
+      title: 'Register - 2CRM'
+    }
   },
   {
     path: '/',
@@ -27,7 +33,10 @@ const routes = [
       {
         path: 'tasks',
         name: 'TaskList',
-        component: TasksPage
+        component: TasksPage,
+        meta: {
+          title: 'My Tasks - 2CRM'
+        }
       }
     ]
   },
@@ -35,12 +44,18 @@ const routes = [
     path: '/notifications',
     name: 'notifications',
     component: NotificationsPage,
-    meta: { requiresAuth: true }
+    meta: {
+      requiresAuth: true,
+      title: 'Notifications - 2CRM'
+    }
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: NotFound
+    component: NotFound,
+    meta: {
+      title: 'Page Not Found - 2CRM'
+    }
   }
 ];
 
@@ -63,6 +78,10 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
+});
+
+router.afterEach((to) => {
+  document.title = to.meta.title || '2CRM';
 });
 
 export default router;

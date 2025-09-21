@@ -7,7 +7,7 @@
       <div v-if="notificationStore.notifications.length === 0" class="text-white text-lg">
         Vous n'avez pas de nouvelles notifications.
       </div>
-      <div v-else class="space-y-4">
+      <div v-else class="space-y-4 mt-[70px] md:mt-[80px]">
         <div
           v-for="(notif, index) in notificationStore.notifications"
           :key="index"

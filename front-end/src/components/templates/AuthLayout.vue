@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-col md:flex-row h-screen bg-[#1A1A1A] text-gray-100">
+  <div class="flex flex-col md:flex-row h-screen text-gray-100">
     <div class="md:w-1/2 h-1/2 md:h-full">
       <SidebarBrand imageUrl="https://mir-s3-cdn-cf.behance.net/project_modules/1400_webp/42c8c2229780587.686b79c3258dd.jpg" />
     </div>
 
-    <div class="md:w-1/2 flex flex-col items-center justify-center p-8">
+    <div class="md:w-1/2 flex flex-col bg-[#1A1A1A] items-center justify-center p-8">
       <div class="w-full max-w-md">
         <div class="flex justify-end mb-6">
           <router-link :to="altRoute.path" class="text-sm hover:underline">

@@ -1,6 +1,9 @@
 <template>
   <div class="flex min-h-screen bg-[#111111]">
-    <div class="md:hidden p-4 fixed top-0 left-0 z-50">
+    <div
+      class="md:hidden p-4 top-0 left-0 z-50 transition-all duration-300 ease-in-out"
+      :class="isMobileMenuOpen ? 'fixed' : 'absolute'"
+    >
       <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="text-[#F5F5F5] mt-[13px] focus:outline-none">
         <TextAlignJustify v-if="!isMobileMenuOpen" size="30" />
         <X v-else size="30" />
@@ -54,7 +57,7 @@
               <Bell />
               <span v-if="hasNewNotifications" class="absolute top-[2px] right-[0.6px] h-3 w-3 bg-[#2980B9] rounded-full"></span>
             </button>
-            <div v-if="isNotificationsOpen" class="absolute right-[-140px] md:right-0 mt-2 w-72 bg-[#F5F5F5] rounded-md shadow-lg py-1 z-50">
+            <div v-if="isNotificationsOpen" class="absolute left-[-50px] md:left-auto md:right-0 mt-2 w-72 bg-[#F5F5F5] rounded-md shadow-lg py-1 z-50">
               <div v-if="limitedNotifications.length === 0" class="px-4 py-2 text-sm text-gray-500">
                 No new notifications.
               </div>
