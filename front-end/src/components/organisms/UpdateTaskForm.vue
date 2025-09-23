@@ -52,7 +52,7 @@ const form = reactive({
 
 onMounted(async () => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/api/tasks/${props.task.id}`);
+    const response = await axios.get(`/tasks/${props.task.id}`);
     const fetchedTask = response.data;
     Object.assign(form, {
       title: fetchedTask.title,
@@ -76,7 +76,7 @@ async function onSubmit() {
 
     console.log('Sending payload:', payload);
 
-    const { data } = await axios.put(`http://127.0.0.1:8000/api/tasks/${props.task.id}`, payload);
+    const { data } = await axios.put(`/tasks/${props.task.id}`, payload);
     window.location.reload(); 
 
     emit('update', data);

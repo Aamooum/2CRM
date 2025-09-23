@@ -95,7 +95,7 @@ async function onSubmit() {
     status: form.status
   }
   try {
-    const res = await axios.post('http://127.0.0.1:8000/api/tasks', payload)
+    const res = await axios.post('/tasks', payload)
     emit('create', res.data)
   } catch (e) {
     console.error('Create task failed', e)

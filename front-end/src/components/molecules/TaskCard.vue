@@ -68,7 +68,7 @@ function openUpdateForm() {
 async function removeTask() {
   try {
     isMenuOpen.value = false
-    await axios.delete(`http://127.0.0.1:8000/api/tasks/${props.task.id}`)
+    await axios.delete(`/tasks/${props.task.id}`)
     window.location.reload(); 
     emit('removeTaskSuccess', props.task.id)
   } catch (error) {

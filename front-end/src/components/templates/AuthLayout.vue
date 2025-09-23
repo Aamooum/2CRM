@@ -57,7 +57,7 @@ const config = {
     submitLabel: 'Register',
     altRoute: { path: '/login', label: 'Login' },
     FormComponent: RegisterForm,
-    endpoint: 'http://127.0.0.1:8000/api/register'
+    endpoint: '/register'
   },
   Login: {
     title: 'Login to your account',
@@ -65,7 +65,7 @@ const config = {
     submitLabel: 'Continue',
     altRoute: { path: '/register', label: 'Register' },
     FormComponent: LoginForm,
-    endpoint: 'http://127.0.0.1:8000/api/login'
+    endpoint: '/login'
   },
 }
 
@@ -83,7 +83,9 @@ async function handleSubmit(payload) {
       apiErrors.value = err.response.data.errors;
     } else {
       console.error('API Error:', err);
-      apiErrors.value.general = ['password or email incorrect'];
+      if (routeName === 'Login') {
+        apiErrors.value.general = ['password or email incorrect'];
+      }
     }
   }
 }

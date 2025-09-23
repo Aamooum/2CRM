@@ -78,7 +78,7 @@ function normalize(raw) {
 
 onMounted(async () => {
   try {
-    const { data } = await axios.get('http://127.0.0.1:8000/api/tasks');
+    const { data } = await axios.get('/tasks');
     tasks.value = data.map(normalize);
     notificationStore.loadNotifications();
 
