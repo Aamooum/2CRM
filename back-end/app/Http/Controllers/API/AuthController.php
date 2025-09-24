@@ -43,8 +43,8 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'User registered successfully',
             'user'    => $user,
-        ], 201)
-        ->cookie('token', $token, 60, null, null, false, true);
+            'token'   => $token,
+        ], 201);
     }
 
     /**
@@ -61,19 +61,18 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Login successful',
             'user'    => auth()->user(),
-        ])
-        ->cookie('token', $token, 60, null, null, false, true);
+            'token'   => $token,
+        ]);
     }
 
     /**
-     * Log the user out (invalidate the cookie).
+     * Log the user out.
      */
     public function logout()
     {
         auth()->logout();
 
-        return response()->json(['message' => 'Successfully logged out'])
-            ->cookie('token', '', -1, null, null, false, true); 
+        return response()->json(['message' => 'Successfully logged out']);
     }
 
     /**
