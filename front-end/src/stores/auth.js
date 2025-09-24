@@ -42,7 +42,6 @@ export const useAuthStore = defineStore('auth', {
         async updateProfile(payload) {
             try {
                 const response = await axios.patch('/profile', payload);
-                // Update the user data in the store with the new data from the API
                 this.user = response.data.user;
                 return response.data;
             } catch (error) {
@@ -51,7 +50,6 @@ export const useAuthStore = defineStore('auth', {
         },
         async logout() {
             try {
-                // The backend will clear the cookie and invalidate the token
                 await axios.post('/logout');
                 this.clearUserData();
             } catch (error) {

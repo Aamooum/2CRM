@@ -77,17 +77,15 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
   
-  // Try to fetch the user to check if the session is still valid
   if (!authStore.user) {
     try {
       await authStore.fetchUser();
     } catch (error) {
-      // If fetching the user fails, it means the session is invalid
-      // The store's fetchUser action will already clear the state.
+      console.error('Error fetching user during route guard:', error);
     }
   }
 
-  const isAuthenticated = !!authStore.user; // Check for the user object
+  const isAuthenticated = !!authStore.user;
 
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const isGuest = to.matched.some(record => record.meta.guest);

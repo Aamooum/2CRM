@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\TaskController;
+use App\Http\Controllers\API\NotificationController;
 use App\Models\Task;
 use App\Events\MyLol;
 
@@ -14,7 +15,16 @@ Route::post('register', [AuthController::class, 'register']); // public
 Route::middleware('jwt.auth')->group(function () {
     // User Profile
     Route::get('profile', [AuthController::class, 'profile']);
+    Route::patch('profile', [AuthController::class, 'updateProfile']);
+
 
     // Task CRUD
     Route::apiResource('tasks', TaskController::class);
+
+    // Logout
+    Route::post('logout', [AuthController::class, 'logout']);
+
+    // Notifications
+    Route::get('notifications', [NotificationController::class, 'index']);
+    Route::post('notifications', [NotificationController::class, 'store']);
 });

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -41,15 +42,15 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'User registered successfully',
-            'token'   => $token,
             'user'    => $user,
-        ], 201);
+        ], 201)
+        ->cookie('token', $token, 60, null, null, false, true);
     }
 
     /**
      * Authenticate a user and return a JWT token.
      */
-    public function login(Request $request)
+     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
 
@@ -59,9 +60,20 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Login successful',
-            'token'   => $token,
             'user'    => auth()->user(),
-        ]);
+        ])
+        ->cookie('token', $token, 60, null, null, false, true);
+    }
+
+    /**
+     * Log the user out (invalidate the cookie).
+     */
+    public function logout()
+    {
+        auth()->logout();
+
+        return response()->json(['message' => 'Successfully logged out'])
+            ->cookie('token', '', -1, null, null, false, true); 
     }
 
     /**
@@ -71,4 +83,30 @@ class AuthController extends Controller
     {
         return response()->json($request->user(), 200);
     }
+
+    /**
+     * Update the authenticated user's profile.
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'full_name' => 'sometimes|string|max:255',
+            'phone_number' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
+        ]);
+
+        $user->update($request->only([
+            'full_name',
+            'phone_number',
+            'address'
+        ]));
+
+        return response()->json([
+            'message' => 'Profile updated successfully.',
+            'user' => $user
+        ]);
+    }
+    
 }
