@@ -1,22 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 
-axios.defaults.withCredentials = true;
-
-axios.interceptors.request.use(async config => {
-    if (['post', 'put', 'patch', 'delete'].includes(config.method)) {
-        try {
-            await axios.get(`${import.meta.env.VITE_API_BASE_URL}/sanctum/csrf-cookie`, { withCredentials: true });
-        } catch (error) {
-            console.error('Failed to get CSRF cookie:', error);
-            return Promise.reject(error);
-        }
-    }
-    return config;
-}, error => {
-    return Promise.reject(error);
-});
-
 export const useAuthStore = defineStore('auth', {
     state: () => ({
         user: null

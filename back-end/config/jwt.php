@@ -55,14 +55,6 @@ return [
 
     'cookie_same_site' => env('JWT_COOKIE_SAME_SITE', 'lax'),
 
-    /*
-    |--------------------------------------------------------------------------
-    | Providers
-    |--------------------------------------------------------------------------
-    |
-    | Specify the various providers used throughout the package.
-    |
-    */
     'providers' => [
         'jwt' => Tymon\JWTAuth\Providers\JWT\Lcobucci::class,
         'auth' => Tymon\JWTAuth\Providers\Auth\Illuminate::class,
