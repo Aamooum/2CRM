@@ -80,7 +80,8 @@ onMounted(async () => {
   try {
     const { data } = await axios.get('/tasks');
     tasks.value = data.map(normalize);
-    notificationStore.loadNotifications();
+    
+    await notificationStore.fetchNotifications();
 
   } catch (e) {
     console.error('Fetch tasks failed', e);

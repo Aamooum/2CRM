@@ -1,10 +1,10 @@
 <template>
   <div class="flex min-h-screen bg-[#111111]">
     <div
-      class="md:hidden p-4 top-0 left-0 z-50 transition-all duration-300 ease-in-out"
+      class="md:hidden p-4 top-0 left-0 z-50"
       :class="isMobileMenuOpen ? 'fixed' : 'absolute'"
     >
-      <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="text-[#F5F5F5] mt-[13px] focus:outline-none">
+      <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="text-[#F5F5F5] mt-[14px] focus:outline-none">
         <TextAlignJustify v-if="!isMobileMenuOpen" size="30" />
         <X v-else size="30" />
       </button>
@@ -30,10 +30,10 @@
     </aside>
 
     <aside class="hidden md:flex flex-col bg-[#1A1A1A] w-64 shadow px-2">
-      <h2 class="flex items-center text-xl text-[#F5F5F5] font-bold mb-8 pt-4">
+      <router-link to="/tasks" class="flex items-center text-xl text-[#F5F5F5] font-bold mb-8 pt-4">
         <img class="w-[70px]" src="https://static.vecteezy.com/system/resources/previews/019/637/202/non_2x/blue-tape-circle-logo-icon-free-png.png" alt="logo">
         2CRM
-      </h2>
+      </router-link>
       <nav class="flex-1">
         <ul class="space-y-2">
           <router-link to="/tasks" class="block w-full px-4 py-2 text-[#F5F5F5] font-semibold transition-colors duration-300 hover:bg-[#333333]">
@@ -57,7 +57,7 @@
               <Bell />
               <span v-if="hasNewNotifications" class="absolute top-[2px] right-[0.6px] h-3 w-3 bg-[#2980B9] rounded-full"></span>
             </button>
-            <div v-if="isNotificationsOpen" class="absolute left-[-50px] md:left-auto md:right-0 mt-2 w-72 bg-[#F5F5F5] rounded-md shadow-lg py-1 z-50">
+            <div v-if="isNotificationsOpen && !isMobile" class="absolute left-[-50px] md:left-auto md:right-0 mt-2 w-72 bg-[#F5F5F5] rounded-md shadow-lg py-1 z-50">
               <div v-if="limitedNotifications.length === 0" class="px-4 py-2 text-sm text-gray-500">
                 No new notifications.
               </div>
@@ -74,11 +74,17 @@
             </div>
           </div>
           <div v-if="authStore.user" class="relative" ref="profileMenuRef">
-            <button @click="toggleProfileMenu" class="flex items-center space-x-2 rounded-full p-2 pr-4 bg-[#F5F5F5] hover:bg-[#CCCCCC] focus:outline-none focus:ring">
+            <button @click="toggleProfileMenu" class="flex items-center space-x-2 rounded-full p-1 pr-4 bg-[#F5F5F5] hover:bg-[#CCCCCC] focus:outline-none focus:ring">
               <img :src="authStore.user.image" alt="User Profile" class="h-8 w-8 rounded-full object-cover">
               <span class="font-medium text-gray-700">{{ authStore.user.full_name }}</span>
             </button>
             <div v-if="isProfileMenuOpen" class="absolute right-0 mt-2 w-48 bg-[#F5F5F5] rounded-md shadow-lg z-50">
+              <router-link
+                to="/profile"
+                class="block w-full hover:bg-[#CCCCCC] rounded-md text-left px-2 py-3 text-sm text-gray-700"
+              >
+                My Profile
+              </router-link>
               <button @click="logout" class="block w-full hover:bg-[#CCCCCC] rounded-md text-left px-2 py-3 text-sm text-gray-700">
                 Logout
               </button>
@@ -106,6 +112,7 @@ const notificationMenuRef = ref(null);
 const profileMenuRef = ref(null);
 const hasNewNotifications = ref(false);
 const isMobileMenuOpen = ref(false);
+const isMobile = ref(false); // New state variable
 
 const authStore = useAuthStore();
 const notificationStore = useNotificationStore();
@@ -118,17 +125,21 @@ function toggleProfileMenu() {
   isNotificationsOpen.value = false;
 }
 
-function logout() {
-  authStore.clearToken();
+async function logout() {
+  await authStore.logout();
   isProfileMenuOpen.value = false;
   router.push('/login');
 }
 
 function toggleNotifications() {
-  isNotificationsOpen.value = !isNotificationsOpen.value;
-  isProfileMenuOpen.value = false;
-  if (isNotificationsOpen.value) {
-    hasNewNotifications.value = false;
+  if (isMobile.value) {
+    router.push('/notifications');
+  } else {
+    isNotificationsOpen.value = !isNotificationsOpen.value;
+    isProfileMenuOpen.value = false;
+    if (isNotificationsOpen.value) {
+      hasNewNotifications.value = false;
+    }
   }
 }
 
@@ -141,18 +152,33 @@ function closeMenus(event) {
   }
 }
 
-onMounted(() => {
-  document.addEventListener('click', closeMenus);
+function checkMobile() {
+  isMobile.value = window.innerWidth < 768; 
+}
 
-  echo.channel('tasks').listen('TaskCreated', (e) => {
-    notificationStore.addNotification(e);
-    hasNewNotifications.value = true;
-  });
+onMounted(async () => {
+  document.addEventListener('click', closeMenus);
+  window.addEventListener('resize', checkMobile);
+  checkMobile();
+
+  if (authStore.user) {
+    await notificationStore.fetchNotifications();
+  }
+
+  if (authStore.user) {
+    echo.channel('tasks').listen('TaskCreated', (e) => {
+      notificationStore.addNotification(e.message); 
+      hasNewNotifications.value = true;
+    });
+  }
 });
 
 onBeforeUnmount(() => {
   document.removeEventListener('click', closeMenus);
+  window.removeEventListener('resize', checkMobile);
 
-  echo.leaveChannel('tasks');
+  if (authStore.user) {
+    echo.leaveChannel('tasks');
+  }
 });
 </script>

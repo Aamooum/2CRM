@@ -43,7 +43,6 @@ import SidebarBrand from '@/components/organisms/SidebarBrand.vue'
 import LoginForm from '@/components/organisms/LoginForm.vue'
 import RegisterForm from '@/components/organisms/RegisterForm.vue'
 import DividerWithLabel from '@/components/molecules/DividerWithLabel.vue'
-import axios from 'axios';
 import { useAuthStore } from '@/stores/auth.js'
 
 const router = useRouter()
@@ -57,7 +56,7 @@ const config = {
     submitLabel: 'Register',
     altRoute: { path: '/login', label: 'Login' },
     FormComponent: RegisterForm,
-    endpoint: '/register'
+    action: 'register',
   },
   Login: {
     title: 'Login to your account',
@@ -65,19 +64,18 @@ const config = {
     submitLabel: 'Continue',
     altRoute: { path: '/register', label: 'Register' },
     FormComponent: LoginForm,
-    endpoint: '/login'
+    action: 'login',
   },
 }
 
-const { title, subtitle, submitLabel, altRoute, FormComponent, endpoint } = config[routeName]
+const { title, subtitle, submitLabel, altRoute, FormComponent, action } = config[routeName]
 const auth = useAuthStore()
 
 async function handleSubmit(payload) {
   apiErrors.value = {};
   try {
-    const { data } = await axios.post(endpoint, payload);
-    auth.setToken(data.token);
-    window.location.href = "/tasks";
+    await auth[action](payload);
+    router.push('/tasks');
   } catch (err) {
     if (err.response && err.response.status === 422) {
       apiErrors.value = err.response.data.errors;

@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
-
-const NOTIFICATIONS_STORAGE_KEY = 'user-notifications';
+import axios from 'axios';
 
 export const useNotificationStore = defineStore('notifications', {
   state: () => ({
@@ -8,25 +7,23 @@ export const useNotificationStore = defineStore('notifications', {
   }),
 
   actions: {
-    loadNotifications() {
-      const storedNotifications = localStorage.getItem(NOTIFICATIONS_STORAGE_KEY);
-      if (storedNotifications) {
-        this.notifications = JSON.parse(storedNotifications);
+    async fetchNotifications() {
+      try {
+        const response = await axios.get('/notifications');
+        this.notifications = response.data;
+      } catch (error) {
+        console.error('Failed to fetch notifications:', error);
+        this.notifications = [];
       }
     },
 
-    saveNotifications() {
-      localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(this.notifications));
-    },
-    
-    addNotification(newNotification) {
-      this.notifications.unshift(newNotification);
-      this.saveNotifications();
-    },
-    
-    clearNotifications() {
-      this.notifications = [];
-      this.saveNotifications();
+    async addNotification(message) {
+      try {
+        const response = await axios.post('/notifications', { message });
+        this.notifications.unshift(response.data);
+      } catch (error) {
+        console.error('Failed to add notification:', error);
+      }
     },
   },
 });

@@ -3,8 +3,9 @@ import LoginPage from '@/pages/LoginPage.vue';
 import RegisterPage from '@/pages/RegisterPage.vue';
 import TasksPage from '@/pages/TasksPage.vue';
 import NotFound from '@/components/organisms/NotFound.vue';
-import NotificationsPage from '../pages/NotificationsPage.vue';
+import NotificationsPage from '@/pages/NotificationsPage.vue';
 import { useAuthStore } from '@/stores/auth';
+import ProfilePage from '@/pages/ProfilePage.vue';
 
 const routes = [
   {
@@ -23,6 +24,15 @@ const routes = [
     meta: {
       guest: true,
       title: 'Register - 2CRM'
+    }
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: ProfilePage,
+    meta: {
+      requiresAuth: true,
+      title: 'My Profile - 2CRM'
     }
   },
   {
@@ -64,9 +74,20 @@ const router = createRouter({
   routes
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
-  const isAuthenticated = !!authStore.token;
+  
+  // Try to fetch the user to check if the session is still valid
+  if (!authStore.user) {
+    try {
+      await authStore.fetchUser();
+    } catch (error) {
+      // If fetching the user fails, it means the session is invalid
+      // The store's fetchUser action will already clear the state.
+    }
+  }
+
+  const isAuthenticated = !!authStore.user; // Check for the user object
 
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const isGuest = to.matched.some(record => record.meta.guest);

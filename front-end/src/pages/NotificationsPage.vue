@@ -9,8 +9,8 @@
       </div>
       <div v-else class="space-y-4 mt-[70px] md:mt-[80px]">
         <div
-          v-for="(notif, index) in notificationStore.notifications"
-          :key="index"
+          v-for="notif in notificationStore.notifications"
+          :key="notif.id"
           class="bg-[#1A1A1A] text-[#F5F5F5] p-4 rounded-lg shadow-md border border-[#333333] transition-transform duration-300 hover:scale-[1.01]"
         >
           <p class="font-semibold">{{ notif.message }}</p>
@@ -32,7 +32,7 @@ import AppLayout from '@/components/templates/AppLayout.vue';
 
 const notificationStore = useNotificationStore();
 
-onMounted(() => {
-  notificationStore.loadNotifications();
+onMounted(async () => {
+  await notificationStore.fetchNotifications();
 });
 </script>
