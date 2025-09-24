@@ -13,7 +13,7 @@ export default defineConfig({
     host: '0.0.0.0',
     port: process.env.PORT,
     allowedHosts: [
-      'patient-possibility-production.up.railway.app'
+      env.VITE_ALLOWED_HOST
     ]
   }
 });
